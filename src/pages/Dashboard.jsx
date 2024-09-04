@@ -241,12 +241,12 @@ const Dashboard = () => {
                 <h4 className="text-xl text-gray-600 font-semibold">
                     Chart by Priority
                 </h4>
-                <Chart data={data?.graphData} />
+                <Chart data={data?.data.graphData} />
             </div>
 
             <div className="w-full flex flex-col md:flex-row gap-4 2xl:gap-10 py-8">
-                <TaskTable tasks={data?.last10Task} />
-                <UserTable users={data?.users} />
+                <TaskTable tasks={data?.data.last10Task} />
+                <UserTable users={data?.data.users} />
             </div>
         </div>
     );
