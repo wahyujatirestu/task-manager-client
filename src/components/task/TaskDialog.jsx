@@ -11,7 +11,7 @@ import AddSubTask from './AddSubTask';
 import ConfirmatioDialog from '../Dialogs';
 import {
     useDuplicateTaskMutation,
-    useTrashTastMutation,
+    useTrashTaskMutation,
 } from '../../redux/slices/api/taskApiSlice';
 import { toast } from 'sonner';
 
@@ -21,7 +21,7 @@ const TaskDialog = ({ task }) => {
     const [openDialog, setOpenDialog] = useState(false);
 
     const navigate = useNavigate();
-    const [deleteTask] = useTrashTastMutation();
+    const [deleteTask] = useTrashTaskMutation();
     const [duplicateTask] = useDuplicateTaskMutation();
 
     const duplicateHandler = async () => {
@@ -35,8 +35,8 @@ const TaskDialog = ({ task }) => {
                 window.location.reload();
             }, 500);
         } catch (error) {
-            console.log(err);
-            toast.error(err?.data?.message || err.error);
+            console.log(error);
+            toast.error(error?.data?.message || error.error);
         }
     };
     const deleteClicks = () => {
@@ -44,10 +44,9 @@ const TaskDialog = ({ task }) => {
     };
     const deleteHandler = async () => {
         try {
-            const res = await deleteTask({
-                id: task.id,
-                isTrashed: 'trash',
-            }).unwrap();
+            console.log('task id : ', task.id);
+
+            const res = await deleteTask(task.id).unwrap();
 
             toast.success(res?.message);
 
@@ -56,8 +55,8 @@ const TaskDialog = ({ task }) => {
                 window.location.reload();
             }, 500);
         } catch (error) {
-            console.log(err);
-            toast.error(err?.data?.message || err.error);
+            console.log(error);
+            toast.error(error?.data?.message || error.error);
         }
     };
 
@@ -70,7 +69,7 @@ const TaskDialog = ({ task }) => {
                     aria-hidden="true"
                 />
             ),
-            onClick: () => navigate(`/task/${task._id}`),
+            onClick: () => navigate(`/task/${task.id}`),
         },
         {
             label: 'Edit',

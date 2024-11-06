@@ -14,6 +14,10 @@ import { FaList } from 'react-icons/fa';
 import UserInfo from './UserInfo';
 import { IoMdAdd } from 'react-icons/io';
 import AddSubTask from './task/AddSubTask';
+import {
+    useCreateSubTaskMutation,
+    useGetSubTaskQuery,
+} from '../redux/slices/api/taskApiSlice';
 
 const ICONS = {
     high: <MdKeyboardDoubleArrowUp />,
@@ -24,6 +28,21 @@ const ICONS = {
 const TaskCard = ({ task }) => {
     const { user } = useSelector((state) => state.auth);
     const [open, setOpen] = useState(false);
+
+    const { data: subTaskData, refetch: refetchSubTasks } = useGetSubTaskQuery(
+        task.id
+    );
+
+    const [createSubTask] = useCreateSubTaskMutation();
+
+    const handleCreateSubTask = async (data) => {
+        try {
+            await createSubTask({ data, id: task.id });
+            refetchSubTasks();
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     return (
         <>
@@ -48,7 +67,7 @@ const TaskCard = ({ task }) => {
                         <div
                             className={clsx(
                                 'w-4 h-4 rounded-full',
-                                TASK_TYPE[task.stage]
+                                TASK_TYPE[task?.stage]
                             )}
                         />
                         <h4 className="line-clamp-1 text-black">
@@ -92,27 +111,28 @@ const TaskCard = ({ task }) => {
                 </div>
 
                 {/* sub tasks */}
-                {task?.subTasks?.length > 0 ? (
+                {subTaskData?.subTasks?.length > 0 ? (
                     <div className="py-4 border-t border-gray-200">
-                        <h5 className="text-base line-clamp-1 text-black">
-                            {task?.subTasks[0].title}
-                        </h5>
-
-                        <div className="p-4 space-x-8">
-                            <span className="text-sm text-gray-600">
-                                {formatDate(new Date(task?.subTasks[0]?.date))}
-                            </span>
-                            <span className="bg-blue-600/10 px-3 py-1 rounded0full text-blue-700 font-medium">
-                                {task?.subTasks[0].tag}
-                            </span>
-                        </div>
+                        {subTaskData?.subTasks.map((subTask, index) => (
+                            <div key={index} className="mb-2">
+                                <h5 className="text-base line-clamp-1 text-black">
+                                    {subTask.title}
+                                </h5>
+                                <div className="p-4 space-x-8">
+                                    <span className="text-sm text-gray-600">
+                                        {formatDate(new Date(subTask.date))}
+                                    </span>
+                                    <span className="bg-blue-600/10 px-3 py-1 rounded-full text-blue-700 font-medium">
+                                        {subTask.tag}
+                                    </span>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 ) : (
-                    <>
-                        <div className="py-4 border-t border-gray-200">
-                            <span className="text-gray-500">No Sub Task</span>
-                        </div>
-                    </>
+                    <div className="py-4 border-t border-gray-200">
+                        <span className="text-gray-500">No Sub Task</span>
+                    </div>
                 )}
 
                 <div className="w-full pb-2">
@@ -126,7 +146,12 @@ const TaskCard = ({ task }) => {
                 </div>
             </div>
 
-            <AddSubTask open={open} setOpen={setOpen} id={task.id} />
+            <AddSubTask
+                open={open}
+                setOpen={setOpen}
+                id={task.id}
+                onCreateSubTask={handleCreateSubTask}
+            />
         </>
     );
 };

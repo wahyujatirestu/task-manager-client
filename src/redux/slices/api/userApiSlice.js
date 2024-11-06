@@ -4,6 +4,14 @@ const USER_URL = '/user';
 
 export const userApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
+        getAllUsers: builder.query({
+            query: () => ({
+                url: `${USER_URL}/get-users`,
+                method: 'GET',
+                credentials: 'include',
+            }),
+        }),
+
         updateUser: builder.mutation({
             query: (data) => ({
                 url: `${USER_URL}/profile`,
@@ -74,4 +82,5 @@ export const {
     useGetNotificationsQuery,
     useMarkNotiAsReadMutation,
     useChangePasswordMutation,
+    useGetAllUsersQuery,
 } = userApiSlice;

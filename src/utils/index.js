@@ -44,9 +44,9 @@ export const PRIOTITYSTYELS = {
 };
 
 export const TASK_TYPE = {
-    todo: 'bg-blue-600',
-    'in progress': 'bg-yellow-600',
-    completed: 'bg-green-600',
+    TODO: 'bg-blue-600',
+    IN_PROGRESS: 'bg-yellow-600',
+    COMPLETED: 'bg-green-600',
 };
 
 export const BGS = [

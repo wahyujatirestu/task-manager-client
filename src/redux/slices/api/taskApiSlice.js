@@ -5,10 +5,9 @@ const TASK_URL = '/task';
 export const taskApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getDasboardStats: builder.query({
-            query: (data) => ({
+            query: () => ({
                 url: `${TASK_URL}/dashboard`,
                 method: 'GET',
-                body: data,
                 credentials: 'include',
             }),
         }),
@@ -48,7 +47,7 @@ export const taskApiSlice = apiSlice.injectEndpoints({
             }),
         }),
 
-        trashTast: builder.mutation({
+        trashTask: builder.mutation({
             query: (id) => ({
                 url: `${TASK_URL}/${id}`,
                 method: 'PUT',
@@ -64,6 +63,40 @@ export const taskApiSlice = apiSlice.injectEndpoints({
                 credentials: 'include',
             }),
         }),
+
+        getSingleTask: builder.query({
+            query: (id) => ({
+                url: `${TASK_URL}/${id}`,
+                method: 'GET',
+                credentials: 'include',
+            }),
+        }),
+
+        getSubTask: builder.query({
+            query: (id) => ({
+                url: `${TASK_URL}/get-subtask/${id}`,
+                method: 'GET',
+                credentials: 'include',
+            }),
+            providesTags: (result, error, id) => [{ type: 'SubTask', id }],
+        }),
+
+        postTaskActivity: builder.mutation({
+            query: (data, id) => ({
+                url: `${TASK_URL}/activity/${id}`,
+                method: 'POST',
+                body: data,
+                credentials: 'include',
+            }),
+        }),
+
+        deleteRestoreTask: builder.mutation({
+            query: ({ id, actionType }) => ({
+                url: `${TASK_URL}/delete-restore/${id}?actionType=${actionType}`,
+                method: 'DELETE',
+                credentials: 'include',
+            }),
+        }),
     }),
 });
 
@@ -73,6 +106,10 @@ export const {
     useCreateTaskMutation,
     useDuplicateTaskMutation,
     useUpdateTaskMutation,
-    useTrashTastMutation,
+    useTrashTaskMutation,
     useCreateSubTaskMutation,
+    useGetSubTaskQuery,
+    useGetSingleTaskQuery,
+    usePostTaskActivityMutation,
+    useDeleteRestoreTaskMutation,
 } = taskApiSlice;

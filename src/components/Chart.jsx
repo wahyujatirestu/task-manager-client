@@ -23,7 +23,7 @@ export const Chart = ({ data }) => {
             {
                 label: 'Total',
                 data: data.map((item) => item.total), // Mengambil nilai total dari data
-                backgroundColor: '#8884d8',
+                backgroundColor: '#3b82f6',
             },
         ],
     };

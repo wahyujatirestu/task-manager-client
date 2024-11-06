@@ -54,7 +54,7 @@ const Login = () => {
                             Manage all your task in one place!
                         </span>
                         <p className="flex flex-col gap-0 md:gap-4 text-4xl md:text-6xl 2xl:text-7xl font-black text-center text-blue-700">
-                            <span>Taskujati</span>
+                            <span>Jastrate</span>
                             <span>Task Manager</span>
                         </p>
 
@@ -143,6 +143,201 @@ const Login = () => {
             </div>
         </div>
     );
+
+    // return (
+    //     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
+    //         <div className="h-[85vh] bg-white text-opacity-90 shadow-2xl w-[85vw] md:w-[90vw] lg:w-[70vw] xl:w-[60vw] rounded-3xl grid xl:grid-cols-2">
+    //             <div className="flex flex-col items-center justify-center gap-10  -mt-14">
+    //                 <div className="flex items-center justify-center flex-col">
+    //                     <div className="flex items-center justify-center">
+    //                         <img
+    //                             src={Chitid}
+    //                             alt="ChitChatID"
+    //                             className="h-[200px]"
+    //                         />
+    //                     </div>
+    //                     <p className="font-medium text-center -mt-[75px]">
+    //                         Ngobrol Aja Dulu!
+    //                     </p>
+    //                 </div>
+    //                 <div className="flex items-center justify-center w-full">
+    //                     <Tabs className="w-3/4">
+    //                         <TabsList className="bg-transparent rounded-none w-full">
+    //                             <TabsTrigger
+    //                                 value="login"
+    //                                 className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-blue-500 p-3 transition-all duration-300">
+    //                                 Login
+    //                             </TabsTrigger>
+    //                             <TabsTrigger
+    //                                 value="signup"
+    //                                 className="data-[state=active]:bg-transparent text-black text-opacity-90 border-b-2 rounded-none w-full data-[state=active]:text-black data-[state=active]:font-semibold data-[state=active]:border-b-blue-500 p-3 transition-all duration-300">
+    //                                 Sign Up
+    //                             </TabsTrigger>
+    //                         </TabsList>
+    //                         <TabsContent
+    //                             className="flex flex-col gap-4 mt-10"
+    //                             value="login">
+    //                             <Input
+    //                                 id="login-email-username"
+    //                                 name="emailOrUsername"
+    //                                 type="text"
+    //                                 placeholder="Email atau Username"
+    //                                 className="rounded-full p-2 px-4"
+    //                                 value={email || username}
+    //                                 onChange={handleEmailOrUsernameChange}
+    //                                 onKeyDown={handleKeyDownLogin} // Add this line
+    //                             />
+    //                             <div className="relative">
+    //                                 <Input
+    //                                     id="login-password"
+    //                                     name="password"
+    //                                     type={
+    //                                         showPassword ? 'text' : 'password'
+    //                                     }
+    //                                     placeholder="Password"
+    //                                     className="rounded-full p-2 px-4 w-full"
+    //                                     value={password}
+    //                                     onChange={(e) =>
+    //                                         setPassword(e.target.value)
+    //                                     }
+    //                                     onKeyDown={handleKeyDownLogin} // Add this line
+    //                                 />
+    //                                 <button
+    //                                     type="button"
+    //                                     className="absolute right-4 top-3 text-gray-600"
+    //                                     onClick={() =>
+    //                                         setShowPassword(!showPassword)
+    //                                     }>
+    //                                     {showPassword ? (
+    //                                         <FaEyeSlash />
+    //                                     ) : (
+    //                                         <FaEye />
+    //                                     )}
+    //                                 </button>
+    //                             </div>
+    //                             <Button
+    //                                 className="rounded-full p-4 mt-8"
+    //                                 onClick={handleLogin}>
+    //                                 Login
+    //                             </Button>
+    //                             <div className="flex items-center justify-center ">
+    //                                 <span className="border-b w-1/4 lg:w-1/3"></span>
+    //                                 <span className="px-2 text-sm text-gray-500">
+    //                                     or
+    //                                 </span>
+    //                                 <span className="border-b w-1/4 lg:w-1/3"></span>
+    //                             </div>
+    //                             <Button
+    //                                 className="rounded-full p-4 btn btn-block btn-sm  bg-slate-100 text-black border-none flex items-center justify-center hover:bg-white"
+    //                                 onClick={loginWithGoogle}>
+    //                                 <FcGoogle className="mr-2" /> Login with
+    //                                 Google
+    //                             </Button>
+    //                         </TabsContent>
+    //                         <TabsContent
+    //                             className="flex flex-col gap-5 mt-1"
+    //                             value="signup">
+    //                             <Input
+    //                                 id="signup-email"
+    //                                 name="email"
+    //                                 type="email"
+    //                                 placeholder="Email"
+    //                                 className="rounded-full p-2 px-4"
+    //                                 value={email}
+    //                                 onChange={(e) => setEmail(e.target.value)}
+    //                                 onKeyDown={handleKeyDownSignup} // Add this line
+    //                             />
+    //                             <Input
+    //                                 id="signup-username"
+    //                                 name="username"
+    //                                 type="text"
+    //                                 placeholder="Username"
+    //                                 className="rounded-full p-2 px-4"
+    //                                 value={username}
+    //                                 onChange={(e) =>
+    //                                     setUsername(e.target.value)
+    //                                 }
+    //                                 onKeyDown={handleKeyDownSignup} // Add this line
+    //                             />
+    //                             <div className="relative">
+    //                                 <Input
+    //                                     id="signup-password"
+    //                                     name="password"
+    //                                     type={
+    //                                         showPassword ? 'text' : 'password'
+    //                                     }
+    //                                     placeholder="Password"
+    //                                     className="rounded-full p-2 px-4 w-full"
+    //                                     value={password}
+    //                                     onChange={(e) =>
+    //                                         setPassword(e.target.value)
+    //                                     }
+    //                                     onKeyDown={handleKeyDownSignup} // Add this line
+    //                                 />
+    //                                 <button
+    //                                     type="button"
+    //                                     className="absolute right-4 top-3 text-gray-600"
+    //                                     onClick={() =>
+    //                                         setShowPassword(!showPassword)
+    //                                     }>
+    //                                     {showPassword ? (
+    //                                         <FaEyeSlash />
+    //                                     ) : (
+    //                                         <FaEye />
+    //                                     )}
+    //                                 </button>
+    //                             </div>
+    //                             <div className="relative">
+    //                                 <Input
+    //                                     id="signup-confirm-password"
+    //                                     name="confirmPassword"
+    //                                     type={
+    //                                         showConfirmPassword
+    //                                             ? 'text'
+    //                                             : 'password'
+    //                                     }
+    //                                     placeholder="Konfirmasi Password"
+    //                                     className="rounded-full p-2 px-4 w-full"
+    //                                     value={confirmPassword}
+    //                                     onChange={(e) =>
+    //                                         setConfirmPassword(e.target.value)
+    //                                     }
+    //                                     onKeyDown={handleKeyDownSignup} // Add this line
+    //                                 />
+    //                                 <button
+    //                                     type="button"
+    //                                     className="absolute right-4 top-3 text-gray-600"
+    //                                     onClick={() =>
+    //                                         setShowConfirmPassword(
+    //                                             !showConfirmPassword
+    //                                         )
+    //                                     }>
+    //                                     {showConfirmPassword ? (
+    //                                         <FaEyeSlash />
+    //                                     ) : (
+    //                                         <FaEye />
+    //                                     )}
+    //                                 </button>
+    //                             </div>
+    //                             <Button
+    //                                 className="rounded-full p-3 bg-sky-700 text-white -mb-[4px]"
+    //                                 onClick={handleSignup}>
+    //                                 Sign Up
+    //                             </Button>
+    //                         </TabsContent>
+    //                     </Tabs>
+    //                 </div>
+    //             </div>
+    //             <div className="hidden xl:flex justify-center items-center">
+    //                 <img
+    //                     src={Background}
+    //                     alt="Background Login"
+    //                     className="h-[560px] w-[430px] -ml-8"
+    //                 />
+    //             </div>
+    //         </div>
+    //     </div>
+    // );
 };
 
 export default Login;

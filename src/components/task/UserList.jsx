@@ -1,18 +1,18 @@
 import { Listbox, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import { BsChevronExpand } from 'react-icons/bs';
-import { summary } from '../../assets/data';
+import { useGetTeamListQuery } from '../../redux/slices/api/userApiSlice';
 import clsx from 'clsx';
 import { getInitials } from '../../utils';
 import { MdCheck } from 'react-icons/md';
 
 const UserList = ({ setTeam, team }) => {
-    const data = summary.users;
+    const { data, isLoading } = useGetTeamListQuery();
     const [selectedUsers, setSelectedUsers] = useState([]);
 
     const handleChange = (el) => {
         setSelectedUsers(el);
-        setTeam(el?.map((u) => u._id));
+        setTeam(el?.map((u) => u.id));
     };
     useEffect(() => {
         if (team?.length < 1) {
@@ -20,7 +20,7 @@ const UserList = ({ setTeam, team }) => {
         } else {
             setSelectedUsers(team);
         }
-    }, []);
+    }, [isLoading]);
 
     return (
         <div>
@@ -32,7 +32,7 @@ const UserList = ({ setTeam, team }) => {
                 <div className="relative mt-1">
                     <Listbox.Button className="relative w-full cursor-default rounded bg-white pl-3 pr-10 text-left px-3 py-2.5 2xl:py-3 border border-gray-300 sm:text-sm">
                         <span className="block truncate">
-                            {selectedUsers?.map((user) => user.name).join(', ')}
+                            {selectedUsers?.map((user) => user.name).join()}
                         </span>
 
                         <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
@@ -69,7 +69,7 @@ const UserList = ({ setTeam, team }) => {
                                                         ? 'font-medium'
                                                         : 'font-normal'
                                                 )}>
-                                                <div className="w-6 h-6 rounded-full text-white flex items-center justify-center bg-violet-600">
+                                                <div className="w-6 h-6 rounded-full text-white flex items-center justify-center bg-blue-600">
                                                     <span className="text-center text-[10px]">
                                                         {getInitials(user.name)}
                                                     </span>

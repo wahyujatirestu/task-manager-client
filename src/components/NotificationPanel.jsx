@@ -1,6 +1,6 @@
 import { Popover, Transition } from '@headlessui/react';
 import moment from 'moment';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { BiSolidMessageRounded } from 'react-icons/bi';
 import { HiBellAlert } from 'react-icons/hi2';
 import { IoIosNotificationsOutline } from 'react-icons/io';
@@ -23,18 +23,34 @@ const ICONS = {
 const NotificationPanel = () => {
     const [open, setOpen] = useState(false);
     const [selected, setSelected] = useState(null);
+    const [notifications, setNotifications] = useState([]);
 
     const { data, refetch } = useGetNotificationsQuery();
     const [markAsRead] = useMarkNotiAsReadMutation();
 
+    useEffect(() => {
+        if (data) {
+            setNotifications(data.filter((item) => !item.isRead));
+        } else {
+            setNotifications([]);
+        }
+    }, [data]);
+
     const readHandler = async (type, id) => {
         await markAsRead({ type, id }).unwrap();
 
+        if (type === 'one') {
+            setNotifications(notifications.filter((item) => item.id !== id));
+        } else if (type === 'all') {
+            setNotifications([]);
+        }
+
         refetch();
     };
+
     const viewHandler = async (el) => {
         setSelected(el);
-        readHandler('one', el.id);
+        await readHandler('one', el.id);
         setOpen(true);
     };
 
@@ -54,9 +70,9 @@ const NotificationPanel = () => {
                 <Popover.Button className="inline-flex items-center outline-none">
                     <div className="w-8 h-8 flex items-center justify-center text-gray-800 relative">
                         <IoIosNotificationsOutline className="text-2xl" />
-                        {data?.length > 0 && (
+                        {notifications?.length > 0 && (
                             <span className="absolute text-center top-0 right-1 text-sm text-white font-semibold w-4 h-4 rounded-full bg-red-600">
-                                {data?.length}
+                                {notifications?.length}
                             </span>
                         )}
                     </div>
@@ -72,10 +88,10 @@ const NotificationPanel = () => {
                     leaveTo="opacity-0 translate-y-1">
                     <Popover.Panel className="absolute -right-16 md:-right-2 z-10 mt-5 flex w-screen max-w-max  px-4">
                         {({ close }) =>
-                            data?.length > 0 && (
+                            notifications?.length > 0 && (
                                 <div className="w-screen max-w-md flex-auto overflow-hidden rounded-3xl bg-white text-sm leading-6 shadow-lg ring-1 ring-gray-900/5">
                                     <div className="p-4">
-                                        {data
+                                        {notifications
                                             ?.slice(0, 5)
                                             .map((item, index) => (
                                                 <div

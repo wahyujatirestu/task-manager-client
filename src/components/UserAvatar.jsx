@@ -22,13 +22,25 @@ const UserAvatar = () => {
 
     const logoutHandler = async () => {
         try {
-            await logoutUser().unwrap();
-            dispatch(logout());
-
+            const response = await logoutUser().unwrap();
+            dispatch(logout()); // Panggil action logout dari Redux terlepas dari respons server
             navigate('/login');
-            console.log('logout');
+            console.log('Logout successful:', response);
+            toast.success('Logged out successfully');
         } catch (error) {
-            toast.error('Something Went Wrong');
+            console.log('Error during logout:', error);
+            if (error?.data?.message === 'User not authenticated') {
+                // Jika user sudah tidak terotentikasi, kita tetap logout dari sisi client
+                dispatch(logout());
+                navigate('/login');
+                toast.info('Your session has expired. Please login again.');
+            } else {
+                toast.error(
+                    error?.data?.message ||
+                        error?.message ||
+                        'Something Went Wrong'
+                );
+            }
         }
     };
 
