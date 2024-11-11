@@ -9,7 +9,7 @@ import {
 } from 'react-icons/md';
 import Title from '../components/Title';
 import Button from '../components/Button';
-import { PRIOTITYSTYELS, TASK_TYPE } from '../utils';
+import { PRIOTITYSTYLES, TASK_TYPE } from '../utils';
 import AddUser from '../components/AddUser';
 import ConfirmatioDialog from '../components/Dialogs';
 import {
@@ -142,7 +142,7 @@ const Trash = () => {
                     <span
                         className={clsx(
                             'text-lg',
-                            PRIOTITYSTYELS[item?.priority]
+                            PRIOTITYSTYLES[item?.priority]
                         )}>
                         {ICONS[item?.priority]}
                     </span>

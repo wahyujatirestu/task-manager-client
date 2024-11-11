@@ -11,7 +11,10 @@ import TaskTitle from '../components/TaskTitle';
 import BoardView from '../components/BoardView';
 import Table from '../components/task/Table';
 import AddTask from '../components/task/AddTask';
-import { useGetAllTaskQuery } from '../redux/slices/api/taskApiSlice';
+import {
+    useGetAllTaskQuery,
+    useUpdateTaskMutation,
+} from '../redux/slices/api/taskApiSlice';
 
 const TASK_TYPE = {
     TODO: 'bg-blue-600',
@@ -37,13 +40,25 @@ const Tasks = () => {
         search: '',
     });
 
-    // Filter tasks based on status/stage
+    const [updateTask] = useUpdateTaskMutation();
+
     const filteredTasks = status
         ? data?.tasks.filter((task) => task.stage === status)
         : data?.tasks;
 
     const handleCreateTaskClick = () => {
         setOpen(true);
+    };
+
+    const updateTaskStage = async (taskId, newStage) => {
+        try {
+            await updateTask({
+                id: taskId,
+                data: { stage: newStage },
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return isLoading ? (
@@ -53,7 +68,7 @@ const Tasks = () => {
     ) : (
         <div className="w-full">
             <div className="flex items-center justify-between mb-4">
-                <Title title={status ? `${status} Tasks` : 'Tasks'} />
+                {/* <Title title={status ? `${status} Tasks` : 'Tasks'} /> */}
 
                 {!status && (
                     <Button
@@ -67,7 +82,7 @@ const Tasks = () => {
 
             <Tabs tabs={TABS} setSelected={setSelected} selected={selected}>
                 {!status && (
-                    <div className="w-full flex justify-between gap-4 md:gap-x-12 py-4">
+                    <div className="w-full flex justify-between gap-4 md:gap-x-12 py-4 mb-4">
                         <TaskTitle label="To Do" className={TASK_TYPE.TODO} />
                         <TaskTitle
                             label="In Progress"
@@ -81,7 +96,10 @@ const Tasks = () => {
                 )}
 
                 {selected !== 1 ? (
-                    <BoardView tasks={filteredTasks} />
+                    <BoardView
+                        tasks={filteredTasks}
+                        onUpdateTaskStatus={updateTaskStage}
+                    />
                 ) : (
                     <div className="w-full">
                         <Table tasks={filteredTasks} />

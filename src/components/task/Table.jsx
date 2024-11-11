@@ -9,7 +9,7 @@ import {
     MdKeyboardDoubleArrowUp,
 } from 'react-icons/md';
 import { toast } from 'sonner';
-import { BGS, PRIOTITYSTYELS, TASK_TYPE, formatDate } from '../../utils';
+import { BGS, PRIOTITYSTYLES, TASK_TYPE, formatDate } from '../../utils';
 import clsx from 'clsx';
 import { FaList } from 'react-icons/fa';
 import UserInfo from '../UserInfo';
@@ -93,7 +93,7 @@ const Table = ({ tasks }) => {
                     <span
                         className={clsx(
                             'text-lg',
-                            PRIOTITYSTYELS[task?.priority]
+                            PRIOTITYSTYLES[task?.priority]
                         )}>
                         {ICONS[task?.priority]}
                     </span>

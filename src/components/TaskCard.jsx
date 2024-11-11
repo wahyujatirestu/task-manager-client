@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     MdAttachFile,
     MdKeyboardArrowDown,
@@ -7,7 +7,7 @@ import {
     MdKeyboardDoubleArrowUp,
 } from 'react-icons/md';
 import { useSelector } from 'react-redux';
-import { BGS, PRIOTITYSTYELS, TASK_TYPE, formatDate } from '../utils';
+import { BGS, PRIOTITYSTYLES, TASK_TYPE, formatDate } from '../utils';
 import TaskDialog from './task/TaskDialog';
 import { BiMessageAltDetail } from 'react-icons/bi';
 import { FaList } from 'react-icons/fa';
@@ -18,11 +18,19 @@ import {
     useCreateSubTaskMutation,
     useGetSubTaskQuery,
 } from '../redux/slices/api/taskApiSlice';
+import { HiMinusSm } from 'react-icons/hi';
 
-const ICONS = {
-    high: <MdKeyboardDoubleArrowUp />,
-    medium: <MdKeyboardArrowUp />,
-    low: <MdKeyboardArrowDown />,
+// Fungsi ICONS berada di dalam file ini untuk menghindari error JSX
+const ICONS = (priority) => {
+    if (priority === 'HIGH') {
+        return <MdKeyboardDoubleArrowUp className="text-red-600" />;
+    } else if (priority === 'MEDIUM') {
+        return <MdKeyboardArrowUp className="text-yellow-600" />;
+    } else if (priority === 'LOW') {
+        return <MdKeyboardArrowDown className="text-blue-600" />;
+    } else {
+        return <HiMinusSm className="text-gray-400" />;
+    }
 };
 
 const TaskCard = ({ task }) => {
@@ -44,17 +52,23 @@ const TaskCard = ({ task }) => {
         }
     };
 
+    useEffect(() => {
+        refetchSubTasks();
+    }, [task]);
+
     return (
         <>
             <div className="w-full h-fit bg-white shadow-md p-4 rounded">
                 <div className="w-full flex justify-between">
-                    <div
-                        className={clsx(
-                            'flex flex-1 gap-1 items-center text-sm font-medium',
-                            PRIOTITYSTYELS[task?.priority]
-                        )}>
-                        <span className="text-lg">{ICONS[task?.priority]}</span>
-                        <span className="uppercase">
+                    <div className="flex flex-1 items-center gap-2">
+                        <span className="text-lg mb-1">
+                            {ICONS(task?.priority)}
+                        </span>
+                        <span
+                            className={clsx(
+                                'uppercase text-sm font-medium px-2 py-0.5 rounded-lg flex items-center justify-center',
+                                PRIOTITYSTYLES[task?.priority.toLowerCase()]
+                            )}>
                             {task?.priority} Priority
                         </span>
                     </div>
@@ -110,7 +124,6 @@ const TaskCard = ({ task }) => {
                     </div>
                 </div>
 
-                {/* sub tasks */}
                 {subTaskData?.subTasks?.length > 0 ? (
                     <div className="py-4 border-t border-gray-200">
                         {subTaskData?.subTasks.map((subTask, index) => (

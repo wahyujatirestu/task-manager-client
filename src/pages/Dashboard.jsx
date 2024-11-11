@@ -11,7 +11,7 @@ import { FaArrowsToDot } from 'react-icons/fa6';
 import moment from 'moment';
 import clsx from 'clsx';
 import { Chart } from '../components/Chart';
-import { BGS, PRIOTITYSTYELS, TASK_TYPE, getInitials } from '../utils';
+import { BGS, PRIOTITYSTYLES, TASK_TYPE, getInitials } from '../utils';
 import UserInfo from '../components/UserInfo';
 import { useGetDasboardStatsQuery } from '../redux/slices/api/taskApiSlice';
 import Loading from '../components/Loader';
@@ -54,9 +54,9 @@ const TaskTable = ({ tasks }) => {
                     <span
                         className={clsx(
                             'text-lg',
-                            PRIOTITYSTYELS[task.priority]
+                            PRIOTITYSTYLES[task.priority]
                         )}>
-                        {ICONS[task.priority]}
+                        {ICONS[task.priority] || null}
                     </span>
                     <span className="capitalize">{task.priority}</span>
                 </div>

@@ -14,9 +14,8 @@ import {
 import { RxActivityLog } from 'react-icons/rx';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
-//import Task from './Task';
 import Tabs from '../components/Tabs';
-import { PRIOTITYSTYELS, TASK_TYPE, getInitials } from '../utils';
+import { PRIOTITYSTYLES, TASK_TYPE, getInitials } from '../utils';
 import Loading from '../components/Loader';
 import Button from '../components/Button';
 import {
@@ -98,7 +97,6 @@ const TaskDetails = () => {
         );
     }
 
-    // Pastikan `data` dan `task` sudah ada sebelum mencoba mengakses properti seperti `stage`
     if (!task) {
         return (
             <div className="py-10">
@@ -123,7 +121,7 @@ const TaskDetails = () => {
                                     <div
                                         className={clsx(
                                             'flex gap-1 items-center text-base font-semibold px-3 py-1 rounded-full',
-                                            PRIOTITYSTYELS[
+                                            PRIOTITYSTYLES[
                                                 data?.task?.priority
                                             ],
                                             bgColor[data?.task?.priority]
@@ -140,18 +138,17 @@ const TaskDetails = () => {
                                         <div
                                             className={clsx(
                                                 'w-4 h-4 rounded-full',
-                                                TASK_TYPE[data?.task?.stage] // Optional chaining to ensure task.stage exists
+                                                TASK_TYPE[data?.task?.stage]
                                             )}
                                         />
                                         <span className="text-black uppercase">
                                             {data?.task?.stage || 'No Stage'}
-                                            {/* Fallback in case stage is undefined */}
                                         </span>
                                     </div>
                                 </div>
 
                                 <p className="text-gray-500">
-                                    Created At:
+                                    Created At :{' '}
                                     {new Date(data?.task?.date).toDateString()}
                                 </p>
 
@@ -283,28 +280,23 @@ const Activities = ({ activity, id, refetch }) => {
     const [selected, setSelected] = useState(act_types[0]);
     const [text, setText] = useState('');
 
-    const {
-        data: postActivityData,
-        isLoading,
-        error,
-        mutate,
-    } = usePostTaskActivityMutation();
+    const [postTaskActivity, { isLoading, error }] =
+        usePostTaskActivityMutation();
 
     const handleSubmit = async () => {
         try {
             const activityData = {
-                type: selected?.toLowerCase(),
+                type: selected,
                 activity: text,
             };
 
-            const result = await mutate({
+            const result = await postTaskActivity({
                 data: activityData,
                 id,
-            });
+            }).unwrap();
 
             setText('');
             toast.success(result?.message);
-
             refetch();
         } catch (error) {
             console.log(error);
@@ -326,7 +318,7 @@ const Activities = ({ activity, id, refetch }) => {
                 <div className="flex flex-col gap-y-1 mb-8">
                     <p className="font-semibold">{item?.by?.name}</p>
                     <div className="text-gray-500 space-y-2">
-                        <span className="capitalize">{item?.type}</span>
+                        <span className="capitalize">{item?.type}</span>{' '}
                         <span className="text-sm">
                             {moment(item?.date).fromNow()}
                         </span>

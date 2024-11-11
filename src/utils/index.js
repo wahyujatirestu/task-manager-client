@@ -1,17 +1,14 @@
 export const formatDate = (date) => {
-    // Get the month, day, and year
     const month = date.toLocaleString('en-US', { month: 'short' });
     const day = date.getDate();
     const year = date.getFullYear();
 
     const formattedDate = `${day}-${month}-${year}`;
-
     return formattedDate;
 };
 
 export function dateFormatter(dateString) {
     const inputDate = new Date(dateString);
-
     if (isNaN(inputDate)) {
         return 'Invalid Date';
     }
@@ -29,18 +26,15 @@ export function getInitials(fullName) {
         return '';
     }
     const names = fullName.split(' ');
-
     const initials = names.slice(0, 2).map((name) => name[0].toUpperCase());
-
     const initialsStr = initials.join('');
-
     return initialsStr;
 }
 
-export const PRIOTITYSTYELS = {
-    high: 'text-red-600',
-    medium: 'text-yellow-600',
-    low: 'text-blue-600',
+export const PRIOTITYSTYLES = {
+    high: 'text-red-600 bg-red-100',
+    medium: 'text-yellow-600 bg-yellow-100',
+    low: 'text-blue-600 bg-blue-100',
 };
 
 export const TASK_TYPE = {
