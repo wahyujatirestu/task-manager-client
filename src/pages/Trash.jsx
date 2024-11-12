@@ -17,6 +17,7 @@ import {
     useGetAllTaskQuery,
 } from '../redux/slices/api/taskApiSlice';
 import { toast } from 'sonner';
+import Loading from '../components/Loader';
 
 const ICONS = {
     high: <MdKeyboardDoubleArrowUp />,
@@ -31,7 +32,7 @@ const Trash = () => {
     const [type, setType] = useState('delete');
     const [selected, setSelected] = useState('');
 
-    const { data, isLoading } = useGetAllTaskQuery({
+    const { data, isLoading, refetch } = useGetAllTaskQuery({
         strQuery: '',
         isTrashed: 'true',
         search: '',
@@ -45,32 +46,28 @@ const Trash = () => {
 
             switch (type) {
                 case 'delete':
-                    (result = await deleteRestoreTask({
+                    result = await deleteRestoreTask({
                         id: selected,
                         actionType: 'delete',
-                    })),
-                        unwrap();
+                    }).unwrap();
                     break;
                 case 'deleteAll':
-                    (result = await deleteRestoreTask({
+                    result = await deleteRestoreTask({
                         id: selected,
                         actionType: 'deleteAll',
-                    })),
-                        unwrap();
+                    }).unwrap();
                     break;
                 case 'restore':
-                    (result = await deleteRestoreTask({
+                    result = await deleteRestoreTask({
                         id: selected,
                         actionType: 'restore',
-                    })),
-                        unwrap();
+                    }).unwrap();
                     break;
                 case 'restoreAll':
-                    (result = await deleteRestoreTask({
+                    result = await deleteRestoreTask({
                         id: selected,
                         actionType: 'restoreAll',
-                    })),
-                        unwrap();
+                    }).unwrap();
                     break;
             }
             toast.success(result?.message);
@@ -80,18 +77,26 @@ const Trash = () => {
                 refetch();
             }, 500);
         } catch (error) {
-            console.log(err);
-            toast.error(err?.data?.message || err.error);
+            console.log(error); // perbaikan dari err ke error
+            toast.error(error?.data?.message || error.error);
         }
     };
 
     const deleteAllClick = () => {
+        if (!data?.tasks?.length) {
+            toast.error('There are no Tasks');
+            return;
+        }
         setType('deleteAll');
-        setMsg('Do you want to permenantly delete all items?');
+        setMsg('Do you want to permanently delete all items?');
         setOpenDialog(true);
     };
 
     const restoreAllClick = () => {
+        if (!data?.tasks?.length) {
+            toast.error('There are no Tasks');
+            return;
+        }
         setType('restoreAll');
         setMsg('Do you want to restore all items in the trash?');
         setOpenDialog(true);
@@ -100,6 +105,7 @@ const Trash = () => {
     const deleteClick = (id) => {
         setType('delete');
         setSelected(id);
+        setMsg('Do you want to permanently delete the selected item?');
         setOpenDialog(true);
     };
 
@@ -109,6 +115,14 @@ const Trash = () => {
         setMsg('Do you want to restore the selected item?');
         setOpenDialog(true);
     };
+
+    if (isLoading) {
+        return (
+            <div className="py-10">
+                <Loading />
+            </div>
+        );
+    }
 
     const TableHeader = () => (
         <thead className="border-b border-gray-300">
@@ -184,7 +198,7 @@ const Trash = () => {
                             icon={
                                 <MdOutlineRestore className="text-lg hidden md:flex" />
                             }
-                            className="flex flex-row-reverse gap-1 items-center  text-black text-sm md:text-base rounded-md 2xl:py-2.5"
+                            className="flex flex-row-reverse gap-1 items-center text-black text-sm md:text-base rounded-md 2xl:py-2.5"
                             onClick={() => restoreAllClick()}
                         />
                         <Button
@@ -192,7 +206,7 @@ const Trash = () => {
                             icon={
                                 <MdDelete className="text-lg hidden md:flex" />
                             }
-                            className="flex flex-row-reverse gap-1 items-center  text-red-600 text-sm md:text-base rounded-md 2xl:py-2.5"
+                            className="flex flex-row-reverse gap-1 items-center text-red-600 text-sm md:text-base rounded-md 2xl:py-2.5"
                             onClick={() => deleteAllClick()}
                         />
                     </div>
@@ -221,6 +235,16 @@ const Trash = () => {
                 type={type}
                 setType={setType}
                 onClick={() => deleteRestoreHandler()}
+                confirmLabel={
+                    type === 'restoreAll'
+                        ? 'Restore All'
+                        : type === 'deleteAll'
+                        ? 'Delete All'
+                        : type === 'restore'
+                        ? 'Restore'
+                        : 'Delete'
+                } // Set confirmLabel sesuai tipe
+                cancelLabel="Cancel"
             />
         </>
     );

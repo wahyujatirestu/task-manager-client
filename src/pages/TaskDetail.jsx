@@ -1,3 +1,5 @@
+// taskDetail.jsx
+
 import clsx from 'clsx';
 import moment from 'moment';
 import React, { useState } from 'react';
@@ -22,17 +24,20 @@ import {
     useGetSingleTaskQuery,
     usePostTaskActivityMutation,
 } from '../redux/slices/api/taskApiSlice';
+import { HiMinusSm } from 'react-icons/hi';
 
 const ICONS = {
-    high: <MdKeyboardDoubleArrowUp />,
-    medium: <MdKeyboardArrowUp />,
-    low: <MdKeyboardArrowDown />,
+    high: <MdKeyboardDoubleArrowUp className="text-red-600" />,
+    medium: <MdKeyboardArrowUp className="text-yellow-600" />,
+    normal: <HiMinusSm className="text-gray-600" />,
+    low: <MdKeyboardArrowDown className="text-blue-600" />,
 };
 
 const bgColor = {
-    high: 'bg-red-200',
-    medium: 'bg-yellow-200',
-    low: 'bg-blue-200',
+    high: 'bg-red-100',
+    medium: 'bg-yellow-100',
+    normal: 'bg-gray-100',
+    low: 'bg-blue-100',
 };
 
 const TABS = [
@@ -40,34 +45,45 @@ const TABS = [
     { title: 'Activities/Timeline', icon: <RxActivityLog /> },
 ];
 
+// Menambahkan pemetaan label untuk tipe aktivitas
+const typeLabels = {
+    Commented: 'Commented',
+    Started: 'Started',
+    Assigned: 'Assigned',
+    Bug: 'Bug',
+    Completed: 'Completed',
+    IN_PROGRESS: 'In Progress', // Ubah label menjadi "In Progress"
+};
+
+// Memastikan semua kunci sesuai dengan ActivityType yang didefinisikan di enum
 const TASKTYPEICON = {
-    commented: (
+    Commented: (
         <div className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white">
-            <MdOutlineMessage />,
+            <MdOutlineMessage />
         </div>
     ),
-    started: (
+    Started: (
         <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white">
             <FaThumbsUp size={20} />
         </div>
     ),
-    assigned: (
+    Assigned: (
         <div className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-500 text-white">
             <FaUser size={14} />
         </div>
     ),
-    bug: (
-        <div className="text-red-600">
+    Bug: (
+        <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white">
             <FaBug size={24} />
         </div>
     ),
-    completed: (
+    Completed: (
         <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white">
             <MdOutlineDoneAll size={24} />
         </div>
     ),
-    'in progress': (
-        <div className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white">
+    IN_PROGRESS: (
+        <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-600 text-white">
             <GrInProgress size={16} />
         </div>
     ),
@@ -76,7 +92,7 @@ const TASKTYPEICON = {
 const act_types = [
     'Started',
     'Completed',
-    'In Progress',
+    'IN_PROGRESS',
     'Commented',
     'Bug',
     'Assigned',
@@ -120,17 +136,26 @@ const TaskDetails = () => {
                                 <div className="flex items-center gap-5">
                                     <div
                                         className={clsx(
-                                            'flex gap-1 items-center text-base font-semibold px-3 py-1 rounded-full',
-                                            PRIOTITYSTYLES[
-                                                data?.task?.priority
-                                            ],
-                                            bgColor[data?.task?.priority]
+                                            'flex gap-2 items-center text-base font-semibold px-3 py-1 rounded-full',
+                                            bgColor[
+                                                task?.priority.toLowerCase()
+                                            ]
                                         )}>
                                         <span className="text-lg">
-                                            {ICONS[data?.task?.priority]}
+                                            {
+                                                ICONS[
+                                                    task?.priority.toLowerCase()
+                                                ]
+                                            }
                                         </span>
-                                        <span className="uppercase">
-                                            {data?.task?.priority} Priority
+                                        <span
+                                            className={clsx(
+                                                'uppercase',
+                                                PRIOTITYSTYLES[
+                                                    task?.priority.toLowerCase()
+                                                ]
+                                            )}>
+                                            {task?.priority} Priority
                                         </span>
                                     </div>
 
@@ -138,18 +163,18 @@ const TaskDetails = () => {
                                         <div
                                             className={clsx(
                                                 'w-4 h-4 rounded-full',
-                                                TASK_TYPE[data?.task?.stage]
+                                                TASK_TYPE[task?.stage]
                                             )}
                                         />
                                         <span className="text-black uppercase">
-                                            {data?.task?.stage || 'No Stage'}
+                                            {task?.stage || 'No Stage'}
                                         </span>
                                     </div>
                                 </div>
 
                                 <p className="text-gray-500">
                                     Created At :{' '}
-                                    {new Date(data?.task?.date).toDateString()}
+                                    {new Date(task?.date).toDateString()}
                                 </p>
 
                                 <div className="flex items-center gap-8 p-4 border-y border-gray-200">
@@ -157,9 +182,7 @@ const TaskDetails = () => {
                                         <span className="font-semibold">
                                             Assets :
                                         </span>
-                                        <span>
-                                            {data?.task?.assets?.length || 0}
-                                        </span>
+                                        <span>{task?.assets?.length || 0}</span>
                                     </div>
 
                                     <span className="text-gray-400">|</span>
@@ -169,7 +192,7 @@ const TaskDetails = () => {
                                             Sub-Task :
                                         </span>
                                         <span>
-                                            {data?.task?.subTasks?.length || 0}
+                                            {task?.subTasks?.length || 0}
                                         </span>
                                     </div>
                                 </div>
@@ -179,7 +202,7 @@ const TaskDetails = () => {
                                         TASK TEAM
                                     </p>
                                     <div className="space-y-3">
-                                        {data?.task?.team?.map((m, index) => (
+                                        {task?.team?.map((m, index) => (
                                             <div
                                                 key={index}
                                                 className="flex gap-4 py-2 items-center border-t border-gray-200">
@@ -210,38 +233,36 @@ const TaskDetails = () => {
                                         SUB-TASKS
                                     </p>
                                     <div className="space-y-8">
-                                        {data?.task?.subTasks?.map(
-                                            (el, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="flex gap-3">
-                                                    <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-50-200">
-                                                        <MdTaskAlt
-                                                            className="text-blue-600"
-                                                            size={26}
-                                                        />
-                                                    </div>
-
-                                                    <div className="space-y-1">
-                                                        <div className="flex gap-2 items-center">
-                                                            <span className="text-sm text-gray-500">
-                                                                {new Date(
-                                                                    el?.date
-                                                                ).toDateString()}
-                                                            </span>
-
-                                                            <span className="px-2 py-0.5 text-center text-sm rounded-full bg-blue-100 text-blue-700 font-semibold">
-                                                                {el?.tag}
-                                                            </span>
-                                                        </div>
-
-                                                        <p className="text-gray-700">
-                                                            {el?.title}
-                                                        </p>
-                                                    </div>
+                                        {task?.subTasks?.map((el, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex gap-3">
+                                                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-blue-100">
+                                                    <MdTaskAlt
+                                                        className="text-blue-600"
+                                                        size={26}
+                                                    />
                                                 </div>
-                                            )
-                                        )}
+
+                                                <div className="space-y-1">
+                                                    <div className="flex gap-2 items-center">
+                                                        <span className="text-sm text-gray-500">
+                                                            {new Date(
+                                                                el?.date
+                                                            ).toDateString()}
+                                                        </span>
+
+                                                        <span className="px-2 py-0.5 text-center text-sm rounded-full bg-blue-100 text-blue-700 font-semibold">
+                                                            {el?.tag}
+                                                        </span>
+                                                    </div>
+
+                                                    <p className="text-gray-700">
+                                                        {el?.title}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -250,11 +271,11 @@ const TaskDetails = () => {
                                 <p className="text-lg font-semibold">ASSETS</p>
 
                                 <div className="w-full grid grid-cols-2 gap-4">
-                                    {data?.task?.assets?.map((el, index) => (
+                                    {task?.assets?.map((el, index) => (
                                         <img
                                             key={index}
                                             src={el}
-                                            alt={data?.task?.title}
+                                            alt={task?.title}
                                             className="w-full rounded h-28 md:h-36 2xl:h-52 cursor-pointer transition-all duration-700 hover:scale-125 hover:z-50"
                                         />
                                     ))}
@@ -265,7 +286,7 @@ const TaskDetails = () => {
                 ) : (
                     <>
                         <Activities
-                            activity={data?.task?.activities}
+                            activity={task?.activities}
                             id={id}
                             refetch={refetch}
                         />
@@ -276,6 +297,7 @@ const TaskDetails = () => {
     );
 };
 
+// Tambahkan definisi komponen Activities di bawah TaskDetails
 const Activities = ({ activity, id, refetch }) => {
     const [selected, setSelected] = useState(act_types[0]);
     const [text, setText] = useState('');
@@ -303,6 +325,7 @@ const Activities = ({ activity, id, refetch }) => {
             toast.error(error?.data?.message || error.error);
         }
     };
+
     const Card = ({ item }) => {
         return (
             <div className="flex space-x-4">
@@ -318,7 +341,7 @@ const Activities = ({ activity, id, refetch }) => {
                 <div className="flex flex-col gap-y-1 mb-8">
                     <p className="font-semibold">{item?.by?.name}</p>
                     <div className="text-gray-500 space-y-2">
-                        <span className="capitalize">{item?.type}</span>{' '}
+                        <span>{typeLabels[item?.type]}</span>{' '}
                         <span className="text-sm">
                             {moment(item?.date).fromNow()}
                         </span>
@@ -352,15 +375,15 @@ const Activities = ({ activity, id, refetch }) => {
                     Add Activity
                 </h4>
                 <div className="w-full flex flex-wrap gap-5">
-                    {act_types.map((item, index) => (
+                    {act_types.map((item) => (
                         <div key={item} className="flex gap-2 items-center">
                             <input
                                 type="checkbox"
                                 className="w-4 h-4"
-                                checked={selected === item ? true : false}
-                                onChange={(e) => setSelected(item)}
+                                checked={selected === item}
+                                onChange={() => setSelected(item)}
                             />
-                            <p>{item}</p>
+                            <p>{typeLabels[item]}</p>
                         </div>
                     ))}
                     <textarea
@@ -384,4 +407,5 @@ const Activities = ({ activity, id, refetch }) => {
         </div>
     );
 };
+
 export default TaskDetails;

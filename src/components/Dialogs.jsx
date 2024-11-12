@@ -12,6 +12,8 @@ export default function ConfirmatioDialog({
     onClick = () => {},
     type = 'delete',
     setType = () => {},
+    confirmLabel = 'Delete', // Tambahkan default label
+    cancelLabel = 'Cancel', // Tambahkan default label
 }) {
     const closeDialog = () => {
         setType('delete');
@@ -50,14 +52,14 @@ export default function ConfirmatioDialog({
                                     : 'bg-red-600 hover:bg-red-500'
                             )}
                             onClick={onClick}
-                            label={type === 'restore' ? 'Restore' : 'Delete'}
+                            label={confirmLabel} // Gunakan confirmLabel
                         />
 
                         <Button
                             type="button"
                             className="bg-white px-8 text-sm font-semibold text-gray-900 sm:w-auto border"
                             onClick={() => closeDialog()}
-                            label="Cancel"
+                            label={cancelLabel} // Gunakan cancelLabel
                         />
                     </div>
                 </div>
