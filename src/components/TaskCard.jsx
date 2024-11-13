@@ -66,7 +66,7 @@ const TaskCard = ({ task }) => {
                         </span>
                         <span
                             className={clsx(
-                                'uppercase text-sm font-medium px-2 py-0.5 rounded-lg flex items-center justify-center',
+                                'uppercase text-sm font-medium px-1 py-1 rounded-lg flex items-center justify-center',
                                 PRIOTITYSTYLES[task?.priority.toLowerCase()]
                             )}>
                             {task?.priority} Priority
@@ -84,7 +84,7 @@ const TaskCard = ({ task }) => {
                                 TASK_TYPE[task?.stage]
                             )}
                         />
-                        <h4 className="line-clamp-1 text-black">
+                        <h4 className="line-clamp-1 text-black  py-1 mt-[3px]">
                             {task?.title}
                         </h4>
                     </div>

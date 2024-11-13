@@ -34,6 +34,7 @@ export function getInitials(fullName) {
 export const PRIOTITYSTYLES = {
     high: 'text-red-600 bg-red-100',
     medium: 'text-yellow-600 bg-yellow-100',
+    normal: 'text-gray-600 bg-gray-100',
     low: 'text-blue-600 bg-blue-100',
 };
 
@@ -49,3 +50,11 @@ export const BGS = [
     'bg-red-600',
     'bg-green-600',
 ];
+
+// Tambahkan fungsi formatStage
+export const formatStage = (stage) => {
+    if (stage === 'IN_PROGRESS') {
+        return 'IN-PROGRESS';
+    }
+    return stage;
+};

@@ -84,7 +84,7 @@ const Trash = () => {
 
     const deleteAllClick = () => {
         if (!data?.tasks?.length) {
-            toast.error('There are no Tasks');
+            toast.error('There are no tasks to delete!');
             return;
         }
         setType('deleteAll');
@@ -94,7 +94,7 @@ const Trash = () => {
 
     const restoreAllClick = () => {
         if (!data?.tasks?.length) {
-            toast.error('There are no Tasks');
+            toast.error('There are no tasks to restore!');
             return;
         }
         setType('restoreAll');

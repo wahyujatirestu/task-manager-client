@@ -17,7 +17,7 @@ import { RxActivityLog } from 'react-icons/rx';
 import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import Tabs from '../components/Tabs';
-import { PRIOTITYSTYLES, TASK_TYPE, getInitials } from '../utils';
+import { PRIOTITYSTYLES, TASK_TYPE, formatStage, getInitials } from '../utils';
 import Loading from '../components/Loader';
 import Button from '../components/Button';
 import {
@@ -52,7 +52,7 @@ const typeLabels = {
     Assigned: 'Assigned',
     Bug: 'Bug',
     Completed: 'Completed',
-    IN_PROGRESS: 'In Progress', // Ubah label menjadi "In Progress"
+    IN_PROGRESS: 'In-Progress', // Displayed label updated
 };
 
 // Memastikan semua kunci sesuai dengan ActivityType yang didefinisikan di enum
@@ -167,7 +167,8 @@ const TaskDetails = () => {
                                             )}
                                         />
                                         <span className="text-black uppercase">
-                                            {task?.stage || 'No Stage'}
+                                            {formatStage(task?.stage) ||
+                                                'No Stage'}
                                         </span>
                                     </div>
                                 </div>
