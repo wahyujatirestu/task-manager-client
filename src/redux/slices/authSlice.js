@@ -11,6 +11,7 @@ const initialState = {
     refreshToken: localStorage.getItem('userInfo')
         ? JSON.parse(localStorage.getItem('userInfo')).refreshToken
         : null,
+    isEmailVerified: false,
 };
 
 const authSlice = createSlice({

@@ -26,6 +26,42 @@ export const authApiSlice = apiSlice.injectEndpoints({
             }),
         }),
 
+        verifyEmail: builder.query({
+            query: ({ queryString }) => ({
+                url: `${AUTH_URL}/verify-email?${queryString}`,
+                method: 'GET',
+            }),
+        }),
+
+        resendVerificationEmail: builder.mutation({
+            query: (email) => ({
+                url: `${AUTH_URL}/resend-verification`,
+                method: 'POST',
+                body: { email },
+            }),
+        }),
+
+        requestPasswordReset: builder.mutation({
+            query: (data) => {
+                console.log('Data yang dikirim ke API:', data); // Log untuk debugging
+                return {
+                    url: '/user/forget-password',
+                    method: 'POST',
+                    body: data,
+                    credentials: 'include',
+                };
+            },
+        }),
+
+        resetPassword: builder.mutation({
+            query: (data) => ({
+                url: `${AUTH_URL}/reset-password`,
+                method: 'POST',
+                body: data,
+                credentials: 'include',
+            }),
+        }),
+
         logout: builder.mutation({
             query: () => {
                 const url = `${AUTH_URL}/logout`;
@@ -40,5 +76,12 @@ export const authApiSlice = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useLoginMutation, useRegisterMutation, useLogoutMutation } =
-    authApiSlice;
+export const {
+    useLoginMutation,
+    useRegisterMutation,
+    useVerifyEmailQuery,
+    useLogoutMutation,
+    useRequestPasswordResetMutation,
+    useResetPasswordMutation,
+    useResendVerificationEmailMutation,
+} = authApiSlice;

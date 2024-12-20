@@ -2,7 +2,20 @@ import React from 'react';
 import clsx from 'clsx';
 
 const Textbox = React.forwardRef(
-    ({ type, placeholder, label, className, register, name, error }, ref) => {
+    (
+        {
+            type,
+            placeholder,
+            label,
+            className,
+            register,
+            name,
+            error,
+            onChange, // Tambahkan onChange
+            value, // Tambahkan value
+        },
+        ref
+    ) => {
         return (
             <div className="w-full flex flex-col gap-1">
                 {label && (
@@ -12,11 +25,13 @@ const Textbox = React.forwardRef(
                 )}
                 <div>
                     <input
-                        id={name} // Tambahkan id yang sesuai dengan name
+                        id={name}
                         type={type}
                         name={name}
                         placeholder={placeholder}
                         ref={ref}
+                        value={value} // Bind value
+                        onChange={onChange} // Bind onChange
                         {...register}
                         aria-invalid={error ? 'true' : 'false'}
                         className={clsx(

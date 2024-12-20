@@ -20,6 +20,22 @@ export const taskApiSlice = apiSlice.injectEndpoints({
             }),
         }),
 
+        searchTask: builder.query({
+            query: ({ query }) => ({
+                url: `${TASK_URL}/search?query=${query}`,
+                method: 'GET',
+                credentials: 'include',
+            }),
+        }),
+
+        getSuggestions: builder.query({
+            query: (query) => ({
+                url: `${TASK_URL}/suggestions?query=${query}`,
+                method: 'GET',
+                credentials: 'include',
+            }),
+        }),
+
         createTask: builder.mutation({
             query: (data) => ({
                 url: `${TASK_URL}/create`,
@@ -112,4 +128,6 @@ export const {
     useGetSingleTaskQuery,
     usePostTaskActivityMutation,
     useDeleteRestoreTaskMutation,
+    useSearchTaskQuery,
+    useGetSuggestionsQuery,
 } = taskApiSlice;

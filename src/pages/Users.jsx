@@ -74,13 +74,15 @@ const Users = () => {
     };
 
     const TableHeader = () => (
-        <thead className="border-b border-gray-300">
-            <tr className="text-black text-left">
+        <thead className="border-b border-gray-300 ">
+            <tr className="text-black text-left ">
                 <th className="py-2">Full Name</th>
+                <th className="py-2">Username</th>
                 <th className="py-2">Title</th>
                 <th className="py-2">Email</th>
                 <th className="py-2">Role</th>
                 <th className="py-2">Active</th>
+                <th className="py-2">Action</th>
             </tr>
         </thead>
     );
@@ -97,7 +99,7 @@ const Users = () => {
                     {user.name}
                 </div>
             </td>
-
+            <td className="p-2">{user.username}</td>
             <td className="p-2">{user.title}</td>
             <td className="p-2">{user.email || 'user.email.com'}</td>
             <td className="p-2">{user.role}</td>

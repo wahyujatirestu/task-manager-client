@@ -25,22 +25,51 @@ const AddUser = ({ open, setOpen, userData }) => {
 
     const [addNewUser, { isLoading }] = useRegisterMutation();
     const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
-    const handleOnSubmit = async () => {
+    // const handleOnSubmit = async () => {
+    //     try {
+    //         if (userData) {
+    //             const result = await updateUser(data).unwrap();
+
+    //             toast.success('Profile Updated Successfully');
+
+    //             if (userData?.id === user > id) {
+    //                 dispatch(setCredentials(...result.user));
+    //             }
+    //         }
+    //         // else {
+    //         //     const result = await addNewUser({
+    //         //         ...data,
+    //         //         password: data.email || data.username,
+    //         //     }).unwrap();
+    //         //     toast.success('New User added successfully');
+    //         // }
+
+    //         // setTimeout(() => {
+    //         //     setOpen(false);
+    //         // }, 1500);
+    //     } catch (error) {
+    //         toast.error('Something went wrong');
+    //     }
+    // };
+
+    const handleOnSubmit = async (data) => {
         try {
+            console.log('Submitting data:', data); // Log the data being submitted
+
             if (userData) {
-                const result = await updateUser(data).unwrap();
+                const result = await updateUser(data).unwrap(); // Pass data here
 
                 toast.success('Profile Updated Successfully');
 
-                if (userData?.id === user > id) {
-                    dispatch(setCredentials(...result.user));
+                // Log the result to see what is returned
+                console.log('Update result:', result);
+
+                if (userData?.id === user.id) {
+                    // Fix the comparison
+                    dispatch(setCredentials(result.user)); // Pass the correct user object
                 }
             } else {
-                const result = await addNewUser({
-                    ...data,
-                    password: data.email || data.username,
-                }).unwrap();
-                toast.success('New User added successfully');
+                // Handle adding a new user if needed
             }
 
             setTimeout(() => {
@@ -48,6 +77,7 @@ const AddUser = ({ open, setOpen, userData }) => {
             }, 1500);
         } catch (error) {
             toast.error('Something went wrong');
+            console.error('Error updating user:', error); // Log the error for debugging
         }
     };
 
@@ -71,6 +101,19 @@ const AddUser = ({ open, setOpen, userData }) => {
                                 required: 'Full name is required!',
                             })}
                             error={errors.name ? errors.name.message : ''}
+                        />
+                        <Textbox
+                            placeholder="Username"
+                            type="text"
+                            name="username"
+                            label="Username"
+                            className="w-full rounded"
+                            register={register('username', {
+                                required: 'Full name is required!',
+                            })}
+                            error={
+                                errors.username ? errors.username.message : ''
+                            }
                         />
                         <Textbox
                             placeholder="Title"

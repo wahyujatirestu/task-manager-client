@@ -12,4 +12,8 @@ const store = configureStore({
     devTools: true,
 });
 
+store.subscribe(() => {
+    console.log('Redux action dispatched:', store.getState());
+});
+
 export default store;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ModalWrapper from '../ModalWrapper';
 import { Dialog } from '@headlessui/react';
+import { useSelector } from 'react-redux';
 import Textbox from '../Textbox';
 import { useForm } from 'react-hook-form';
 import UserList from './UserList';
@@ -45,6 +46,7 @@ const AddTask = ({ open, setOpen, task }) => {
         formState: { errors },
     } = useForm({ defaultValues });
 
+    const { user } = useSelector((state) => state.auth);
     const [team, setTeam] = useState(task?.team || []);
     const [stage, setStage] = useState(task?.stage?.toUpperCase() || LISTS[0]); // Ensure stage is uppercase
     const [priority, setPriority] = useState(
@@ -160,7 +162,9 @@ const AddTask = ({ open, setOpen, task }) => {
                         error={errors.title ? errors.title.message : ''}
                     />
 
-                    <UserList setTeam={setTeam} team={team} />
+                    {user.role === 'Admin' && (
+                        <UserList setTeam={setTeam} team={team} />
+                    )}
 
                     <div className="flex gap-4">
                         <SelectList

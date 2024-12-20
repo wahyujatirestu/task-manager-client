@@ -9,11 +9,17 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Login from './pages/Login';
 import TaskDetails from './pages/TaskDetail';
+import TaskList from './components/TaskList';
 import Tasks from './pages/Task';
 import Trash from './pages/Trash';
 import Users from './pages/Users';
 import Dashboard from './pages/Dashboard';
 import { setOpenSidebar } from './redux/slices/authSlice';
+import VerifyEmail from './pages/VerifyEmail';
+import ForgetPassword from './pages/ForgetPassword';
+import ResetPassword from './pages/ResetPassword';
+import ResendVerificationEmail from './components/ResendVerificationEmail';
+import VerifyEmailInfo from './components/VerifyEmailInfo';
 
 function Layout() {
     const { user } = useSelector((state) => state.auth);
@@ -107,7 +113,22 @@ function App() {
                     <Route path="/team" element={<Users />} />
                     <Route path="/trashed" element={<Trash />} />
                     <Route path="/task/:id" element={<TaskDetails />} />
+                    <Route path="/tasks" element={<TaskList />} />
                 </Route>
+                <Route path="/verify-email" element={<VerifyEmail />} />
+                <Route
+                    path="/verify-email-info"
+                    element={<VerifyEmailInfo />}
+                />
+                <Route
+                    path="/resend-verification"
+                    element={<ResendVerificationEmail />}
+                />
+                <Route path="/forget-password" element={<ForgetPassword />} />
+                <Route
+                    path="/reset-password/:token"
+                    element={<ResetPassword />}
+                />
 
                 <Route path="/login" element={<Login />} />
             </Routes>
