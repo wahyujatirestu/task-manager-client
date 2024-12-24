@@ -30,8 +30,8 @@ const Textbox = React.forwardRef(
                         name={name}
                         placeholder={placeholder}
                         ref={ref}
-                        value={value} // Bind value
-                        onChange={onChange} // Bind onChange
+                        value={value}
+                        onChange={onChange}
                         {...register}
                         aria-invalid={error ? 'true' : 'false'}
                         className={clsx(

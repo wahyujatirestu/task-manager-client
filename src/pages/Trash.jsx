@@ -10,7 +10,7 @@ import {
 import Title from '../components/Title';
 import Button from '../components/Button';
 import { PRIOTITYSTYLES, TASK_TYPE } from '../utils';
-import AddUser from '../components/AddUser';
+import UpdateUser from '../components/UpdateUser';
 import ConfirmatioDialog from '../components/Dialogs';
 import {
     useDeleteRestoreTaskMutation,
@@ -225,7 +225,7 @@ const Trash = () => {
                 </div>
             </div>
 
-            <AddUser open={open} setOpen={setOpen} />
+            <UpdateUser open={open} setOpen={setOpen} />
 
             <ConfirmatioDialog
                 open={openDialog}

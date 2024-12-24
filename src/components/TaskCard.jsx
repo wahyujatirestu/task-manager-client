@@ -1,3 +1,4 @@
+// TaskCard.jsx
 import clsx from 'clsx';
 import React, { useEffect, useState } from 'react';
 import {
@@ -56,6 +57,9 @@ const TaskCard = ({ task }) => {
         refetchSubTasks();
     }, [task]);
 
+    // Periksa apakah user adalah bagian dari tim
+    const isUserInTeam = task?.team?.some((member) => member.id === user?.id);
+
     return (
         <>
             <div className="w-full h-fit bg-white shadow-md p-4 rounded">
@@ -73,7 +77,8 @@ const TaskCard = ({ task }) => {
                         </span>
                     </div>
 
-                    {user?.role === 'Admin' && <TaskDialog task={task} />}
+                    {/* Tampilkan TaskDialog jika user adalah bagian dari tim */}
+                    {isUserInTeam && <TaskDialog task={task} />}
                 </div>
 
                 <>
@@ -151,8 +156,8 @@ const TaskCard = ({ task }) => {
                 <div className="w-full pb-2">
                     <button
                         onClick={() => setOpen(true)}
-                        disabled={user.role === 'Admin' ? false : true}
-                        className="w-full flex gap-4 items-center text-sm text-gray-500 font-semibold disabled:cursor-not-allowed disabled::text-gray-300">
+                        disabled={!isUserInTeam}
+                        className="w-full flex gap-4 items-center text-sm text-gray-500 font-semibold disabled:cursor-not-allowed disabled:text-gray-300">
                         <IoMdAdd className="text-lg" />
                         <span>ADD SUBTASK</span>
                     </button>

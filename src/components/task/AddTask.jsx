@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ModalWrapper from '../ModalWrapper';
 import { Dialog } from '@headlessui/react';
 import { useSelector } from 'react-redux';
@@ -22,88 +22,121 @@ import {
 import { dateFormatter } from '../../utils';
 import { toast } from 'sonner';
 
-const LISTS = ['TODO', 'IN-PROGRESS', 'COMPLETED']; // List of stages as per enum TaskStage
-const PRIORITY = ['HIGH', 'MEDIUM', 'NORMAL', 'LOW']; // List of priorities
+const LISTS = ['TODO', 'IN-PROGRESS', 'COMPLETED'];
+const PRIORITY = ['HIGH', 'MEDIUM', 'NORMAL', 'LOW'];
 
-const AddTask = ({ open, setOpen, task }) => {
-    const [uploadedFileURLs, setUploadedFileURLs] = useState([]); // URLs after upload
-    const [previewURLs, setPreviewURLs] = useState([]); // Preview before upload
-    const [assets, setAssets] = useState([]); // Selected files
-    const [uploading, setUploading] = useState(false); // Uploading status
+const AddTask = ({ open, setOpen, task, groups, groupId }) => {
+    console.log('AddTask', { open, setOpen, task, groups, groupId });
+
+    const [uploadedFileURLs, setUploadedFileURLs] = useState([]);
+    const [previewURLs, setPreviewURLs] = useState([]);
+    const [assets, setAssets] = useState([]);
+    const [uploading, setUploading] = useState(false);
 
     const defaultValues = {
         title: task?.title || '',
         date: dateFormatter(task?.date || new Date()),
-        team: [],
-        stage: '',
-        priority: '',
-        assets: [],
+        team: task?.team || [],
+        stage: task?.stage || LISTS[0],
+        priority: task?.priority || PRIORITY[2],
     };
 
     const {
         register,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm({ defaultValues });
 
     const { user } = useSelector((state) => state.auth);
     const [team, setTeam] = useState(task?.team || []);
-    const [stage, setStage] = useState(task?.stage?.toUpperCase() || LISTS[0]); // Ensure stage is uppercase
-    const [priority, setPriority] = useState(
-        task?.priority?.toUpperCase() || PRIORITY[2]
-    );
-
+    const [stage, setStage] = useState(task?.stage || LISTS[0]);
+    const [priority, setPriority] = useState(task?.priority || PRIORITY[2]);
     const [createTask] = useCreateTaskMutation();
     const [updateTask] = useUpdateTaskMutation();
-    const URLS = task?.assets ? [...task.assets] : [];
 
-    // Submit handler for the form
+    // Function to check if the user is an admin of the group
+    const isAdmin = () => {
+        if (!groupId || !groups.length) return false;
+        const group = groups.find((group) => group.id === groupId);
+        return group?.adminId === user.id;
+    };
+
+    const URLS = task?.assets || [];
+
+    useEffect(() => {
+        console.log('AddTask: useEffect', { task, groups, groupId });
+        // Reset form when task changes
+        if (task) {
+            reset({
+                title: task.title || '',
+                date: dateFormatter(task.date || new Date()),
+                team: task.team || [],
+                stage: task.stage || LISTS[0],
+                priority: task.priority || PRIORITY[2],
+            });
+            setStage(task.stage || LISTS[0]);
+            setPriority(task.priority || PRIORITY[2]);
+        }
+    }, [task, reset]);
+
     const submitHandler = async (data) => {
+        console.log('AddTask: submitHandler', { data });
         try {
-            setUploading(true); // Set upload status to true
+            setUploading(true);
+
+            // Upload assets
             const uploadedURLs = await Promise.all(
-                assets.map((file) => uploadFile(file)) // Upload files and get URLs
+                assets.map((file) => uploadFile(file))
             );
 
-            const newData = {
+            const taskData = {
                 ...data,
-                assets: [...URLS, ...uploadedURLs], // Add uploaded URLs to form data
-                team,
-                stage: stage.toUpperCase(), // Convert to uppercase to match the enum in Prisma
-                priority,
+                assets: [...URLS, ...uploadedURLs],
+                stage: stage.toUpperCase(),
+                priority: priority.toUpperCase(),
             };
 
-            // Send data to the backend (create or update task)
-            const res = task?.id
-                ? await updateTask({ ...newData, id: task.id }).unwrap()
-                : await createTask(newData).unwrap();
+            // Add team if groupId exists and user is admin
+            if (groupId && isAdmin(groupId)) {
+                taskData.team = team;
+            }
 
-            toast.success(res.message);
+            // Determine if it's an update or create operation
+            if (task) {
+                // Update task
+                await updateTask({
+                    id: task.id,
+                    ...taskData,
+                }).unwrap();
+                toast.success('Task updated successfully');
+            } else {
+                // Create new task
+                await createTask(taskData).unwrap();
+                toast.success('Task created successfully');
+            }
+
             setOpen(false);
         } catch (error) {
-            console.error('Error during task submission:', error);
+            console.error('AddTask: submitHandler', error);
             toast.error(error?.data?.message || error.message);
         } finally {
-            setUploading(false); // Set upload status to false after completion
+            setUploading(false);
         }
     };
 
-    // Handle file selection and save it to state
     const handleSelect = (e) => {
-        const selectedFiles = Array.from(e.target.files); // Get files as an array
-        setAssets(selectedFiles); // Save files to assets state
-
-        // Create preview URLs for selected files
+        console.log('AddTask: handleSelect', e);
+        const selectedFiles = Array.from(e.target.files);
+        setAssets(selectedFiles);
         const previewURLs = selectedFiles.map((file) =>
             URL.createObjectURL(file)
         );
         setPreviewURLs(previewURLs);
-
-        console.log('Selected files:', selectedFiles); // Log selected files
     };
 
-    // Function to upload files to Firebase
     const uploadFile = async (file) => {
+        console.log('AddTask: uploadFile', file);
         const storage = getStorage(app);
         const name = new Date().getTime() + file.name;
         const storageRef = ref(storage, name);
@@ -111,32 +144,13 @@ const AddTask = ({ open, setOpen, task }) => {
         const uploadTask = uploadBytesResumable(storageRef, file);
 
         return new Promise((resolve, reject) => {
-            uploadTask.on(
-                'state_changed',
-                (snapshot) => {
-                    console.log(
-                        `Uploading ${file.name}: ${snapshot.bytesTransferred}/${snapshot.totalBytes}`
-                    );
-                },
-                (error) => {
-                    console.error('Upload error:', error);
-                    reject(error);
-                },
-                () => {
-                    getDownloadURL(uploadTask.snapshot.ref)
-                        .then((downloadURL) => {
-                            setUploadedFileURLs((prev) => [
-                                ...prev,
-                                downloadURL,
-                            ]); // Add new URL to state
-                            resolve(downloadURL);
-                        })
-                        .catch((error) => {
-                            console.error('Failed to get download URL:', error);
-                            reject(error);
-                        });
-                }
-            );
+            uploadTask.on('state_changed', null, reject, async () => {
+                const downloadURL = await getDownloadURL(
+                    uploadTask.snapshot.ref
+                );
+                setUploadedFileURLs((prev) => [...prev, downloadURL]);
+                resolve(downloadURL);
+            });
         });
     };
 
@@ -162,8 +176,12 @@ const AddTask = ({ open, setOpen, task }) => {
                         error={errors.title ? errors.title.message : ''}
                     />
 
-                    {user.role === 'Admin' && (
-                        <UserList setTeam={setTeam} team={team} />
+                    {groupId && isAdmin() && (
+                        <UserList
+                            groupId={groupId}
+                            team={team}
+                            setTeam={setTeam}
+                        />
                     )}
 
                     <div className="flex gap-4">
@@ -203,7 +221,7 @@ const AddTask = ({ open, setOpen, task }) => {
                                     type="file"
                                     className="hidden"
                                     id="imgUpload"
-                                    onChange={handleSelect} // Handle file selection
+                                    onChange={handleSelect}
                                     accept=".jpg, .png, .jpeg"
                                     multiple
                                 />
@@ -213,7 +231,6 @@ const AddTask = ({ open, setOpen, task }) => {
                         </div>
                     </div>
 
-                    {/* Preview selected images before upload */}
                     {previewURLs.length > 0 && (
                         <div className="flex gap-2 flex-wrap">
                             {previewURLs.map((url, index) => (

@@ -4,6 +4,7 @@ import { useRequestPasswordResetMutation } from '../redux/slices/api/authApiSlic
 import { toast } from 'sonner';
 import Textbox from '../components/Textbox';
 import Button from '../components/Button';
+import Loading from '../components/Loader';
 
 const ForgetPassword = () => {
     const [email, setEmail] = useState('');
@@ -54,12 +55,15 @@ const ForgetPassword = () => {
                         required
                     />
 
-                    <Button
-                        type="submit"
-                        label="Send Reset Link"
-                        className="w-full bg-blue-600 text-white"
-                        disabled={isLoading}
-                    />
+                    {isLoading ? (
+                        <Loading />
+                    ) : (
+                        <Button
+                            type="submit"
+                            label="Send Reset Link"
+                            className="w-full h-10 bg-blue-700 text-white rounded-full"
+                        />
+                    )}
                 </form>
             </div>
         </div>

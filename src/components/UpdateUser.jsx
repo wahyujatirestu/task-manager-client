@@ -6,12 +6,11 @@ import { Dialog } from '@headlessui/react';
 import Textbox from './Textbox';
 import Loading from './Loader';
 import Button from './Button';
-import { useRegisterMutation } from '../redux/slices/api/authApiSlice';
 import { toast } from 'sonner';
 import { useUpdateUserMutation } from '../redux/slices/api/userApiSlice';
 import { setCredentials } from '../redux/slices/authSlice';
 
-const AddUser = ({ open, setOpen, userData }) => {
+const UpdateUser = ({ open, setOpen, userData }) => {
     let defaultValues = userData ?? {};
     const { user } = useSelector((state) => state.auth);
 
@@ -23,53 +22,26 @@ const AddUser = ({ open, setOpen, userData }) => {
 
     const dispatch = useDispatch();
 
-    const [addNewUser, { isLoading }] = useRegisterMutation();
     const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
-    // const handleOnSubmit = async () => {
-    //     try {
-    //         if (userData) {
-    //             const result = await updateUser(data).unwrap();
-
-    //             toast.success('Profile Updated Successfully');
-
-    //             if (userData?.id === user > id) {
-    //                 dispatch(setCredentials(...result.user));
-    //             }
-    //         }
-    //         // else {
-    //         //     const result = await addNewUser({
-    //         //         ...data,
-    //         //         password: data.email || data.username,
-    //         //     }).unwrap();
-    //         //     toast.success('New User added successfully');
-    //         // }
-
-    //         // setTimeout(() => {
-    //         //     setOpen(false);
-    //         // }, 1500);
-    //     } catch (error) {
-    //         toast.error('Something went wrong');
-    //     }
-    // };
 
     const handleOnSubmit = async (data) => {
         try {
-            console.log('Submitting data:', data); // Log the data being submitted
+            console.log('Submitting data:', data);
 
             if (userData) {
-                const result = await updateUser(data).unwrap(); // Pass data here
-
+                const result = await updateUser(data).unwrap();
                 toast.success('Profile Updated Successfully');
-
-                // Log the result to see what is returned
                 console.log('Update result:', result);
 
                 if (userData?.id === user.id) {
-                    // Fix the comparison
-                    dispatch(setCredentials(result.user)); // Pass the correct user object
+                    dispatch(
+                        setCredentials({
+                            user: result.user,
+                            accessToken: result.accessToken, // Tambahkan ini jika API mengembalikan token baru
+                            refreshToken: result.refreshToken, // Tambahkan ini jika API mengembalikan refreshToken baru
+                        })
+                    );
                 }
-            } else {
-                // Handle adding a new user if needed
             }
 
             setTimeout(() => {
@@ -77,7 +49,7 @@ const AddUser = ({ open, setOpen, userData }) => {
             }, 1500);
         } catch (error) {
             toast.error('Something went wrong');
-            console.error('Error updating user:', error); // Log the error for debugging
+            console.error('Error updating user:', error);
         }
     };
 
@@ -137,21 +109,9 @@ const AddUser = ({ open, setOpen, userData }) => {
                             })}
                             error={errors.email ? errors.email.message : ''}
                         />
-
-                        <Textbox
-                            placeholder="Role"
-                            type="text"
-                            name="role"
-                            label="Role"
-                            className="w-full rounded"
-                            register={register('role', {
-                                required: 'User role is required!',
-                            })}
-                            error={errors.role ? errors.role.message : ''}
-                        />
                     </div>
 
-                    {isLoading || isUpdating ? (
+                    {isUpdating ? (
                         <div className="py-5">
                             <Loading />
                         </div>
@@ -177,4 +137,4 @@ const AddUser = ({ open, setOpen, userData }) => {
     );
 };
 
-export default AddUser;
+export default UpdateUser;

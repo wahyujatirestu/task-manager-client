@@ -36,6 +36,8 @@ const Login = () => {
         useRegisterMutation();
     const [showPasswordLogin, setShowPasswordLogin] = useState(false);
     const [showPasswordSignup, setShowPasswordSignup] = useState(false);
+    const [showConfirmPasswordSignup, setShowConfirmPasswordSignup] =
+        useState(false);
     const [activeTab, setActiveTab] = useState('login');
     const [isRegistered, setIsRegistered] = useState(false);
 
@@ -125,7 +127,8 @@ const Login = () => {
                             <form
                                 onSubmit={handleSubmit(submitHandler)}
                                 className="flex flex-col gap-y-5">
-                                <div className="relative w-full -mt-2">
+                                <div className=" w-full -mt-2">
+                                    <FaUser className="relative top-[1.8rem] left-4 text-gray-400" />
                                     <Textbox
                                         placeholder="Email or Username"
                                         type="text"
@@ -141,10 +144,23 @@ const Login = () => {
                                                 : ''
                                         }
                                     />
-                                    <FaUser className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>
 
-                                <div className="relative w-full">
+                                <div className="w-full -mt-2 relative">
+                                    <FaLock className="relative top-[1.8rem] left-4 text-gray-400" />
+                                    <div
+                                        className="absolute right-4 w-fit top-8 flex items-center cursor-pointer"
+                                        onClick={() =>
+                                            setShowPasswordLogin(
+                                                !showPasswordLogin
+                                            )
+                                        }>
+                                        {showPasswordLogin ? (
+                                            <FaEyeSlash className="text-gray-500 ml-auto" />
+                                        ) : (
+                                            <FaEye className="text-gray-500 ml-auto" />
+                                        )}
+                                    </div>
                                     <Textbox
                                         placeholder="Password"
                                         type={
@@ -163,20 +179,6 @@ const Login = () => {
                                                 : ''
                                         }
                                     />
-                                    <FaLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                    <div
-                                        className="absolute inset-y-0 right-0 pr-5 mt-7 flex items-center cursor-pointer"
-                                        onClick={() =>
-                                            setShowPasswordLogin(
-                                                !showPasswordLogin
-                                            )
-                                        }>
-                                        {showPasswordLogin ? (
-                                            <FaEyeSlash className="text-gray-500" />
-                                        ) : (
-                                            <FaEye className="text-gray-500" />
-                                        )}
-                                    </div>
                                 </div>
 
                                 <span
@@ -223,7 +225,8 @@ const Login = () => {
                             <form
                                 onSubmit={handleSubmit(submitHandler)}
                                 className="flex flex-col gap-y-5 -mt-2">
-                                <div className="relative w-full">
+                                <div className="w-full -mt-2">
+                                    <FaEnvelope className="relative top-[1.8rem] left-4 text-gray-400" />
                                     <Textbox
                                         placeholder="Email"
                                         type="email"
@@ -238,10 +241,10 @@ const Login = () => {
                                                 : ''
                                         }
                                     />
-                                    <FaEnvelope className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>
 
-                                <div className="relative w-full">
+                                <div className="w-full -mt-2">
+                                    <FaUser className="relative top-[1.8rem] left-4 text-gray-400" />
                                     <Textbox
                                         placeholder="Username"
                                         type="text"
@@ -256,10 +259,23 @@ const Login = () => {
                                                 : ''
                                         }
                                     />
-                                    <FaUser className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
                                 </div>
 
-                                <div className="relative w-full">
+                                <div className="w-full -mt-2 relative">
+                                    <FaLock className="relative top-[1.8rem] left-4 text-gray-400" />
+                                    <div
+                                        className="absolute right-4 w-fit top-8 flex items-center cursor-pointer"
+                                        onClick={() =>
+                                            setShowPasswordSignup(
+                                                !showPasswordSignup
+                                            )
+                                        }>
+                                        {showPasswordSignup ? (
+                                            <FaEyeSlash className="text-gray-500" />
+                                        ) : (
+                                            <FaEye className="text-gray-500" />
+                                        )}
+                                    </div>
                                     <Textbox
                                         placeholder="Password"
                                         type={
@@ -278,27 +294,27 @@ const Login = () => {
                                                 : ''
                                         }
                                     />
-                                    <FaLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                                </div>
+
+                                <div className="w-full -mt-2 relative">
+                                    <FaLock className="relative top-[1.8rem] left-4 text-gray-400" />
                                     <div
-                                        className="absolute inset-y-0 right-0 pr-5 mt-7 flex items-center cursor-pointer"
+                                        className="absolute right-4 w-fit top-8 flex items-center cursor-pointer"
                                         onClick={() =>
-                                            setShowPasswordSignup(
-                                                !showPasswordSignup
+                                            setShowConfirmPasswordSignup(
+                                                !showConfirmPasswordSignup
                                             )
                                         }>
-                                        {showPasswordSignup ? (
+                                        {showConfirmPasswordSignup ? (
                                             <FaEyeSlash className="text-gray-500" />
                                         ) : (
                                             <FaEye className="text-gray-500" />
                                         )}
                                     </div>
-                                </div>
-
-                                <div className="relative w-full">
                                     <Textbox
                                         placeholder="Confirm Password"
                                         type={
-                                            showPasswordSignup
+                                            showConfirmPasswordSignup
                                                 ? 'text'
                                                 : 'password'
                                         }
@@ -314,20 +330,6 @@ const Login = () => {
                                                 : ''
                                         }
                                     />
-                                    <FaLock className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
-                                    <div
-                                        className="absolute inset-y-0 right-0 pr-5 mt-7 flex items-center cursor-pointer"
-                                        onClick={() =>
-                                            setShowPasswordSignup(
-                                                !showPasswordSignup
-                                            )
-                                        }>
-                                        {showPasswordSignup ? (
-                                            <FaEyeSlash className="text-gray-500" />
-                                        ) : (
-                                            <FaEye className="text-gray-500" />
-                                        )}
-                                    </div>
                                 </div>
 
                                 {isLoadingRegister ? (

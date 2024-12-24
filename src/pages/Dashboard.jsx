@@ -15,12 +15,19 @@ import { BGS, PRIOTITYSTYLES, TASK_TYPE, getInitials } from '../utils';
 import UserInfo from '../components/UserInfo';
 import { useGetDasboardStatsQuery } from '../redux/slices/api/taskApiSlice';
 import Loading from '../components/Loader';
+import { HiMinusSm } from 'react-icons/hi';
 
 const TaskTable = ({ tasks }) => {
-    const ICONS = {
-        high: <MdKeyboardDoubleArrowUp />,
-        medium: <MdKeyboardArrowUp />,
-        low: <MdKeyboardArrowDown />,
+    const ICONS = (priority) => {
+        if (priority === 'HIGH') {
+            return <MdKeyboardDoubleArrowUp className="text-red-600" />;
+        } else if (priority === 'MEDIUM') {
+            return <MdKeyboardArrowUp className="text-yellow-600" />;
+        } else if (priority === 'LOW') {
+            return <MdKeyboardArrowDown className="text-blue-600" />;
+        } else {
+            return <HiMinusSm className="text-gray-400" />;
+        }
     };
 
     const TableHeader = () => (
@@ -51,30 +58,32 @@ const TaskTable = ({ tasks }) => {
 
             <td className="py-2">
                 <div className="flex gap-1 items-center">
-                    <span
-                        className={clsx(
-                            'text-lg',
-                            PRIOTITYSTYLES[task.priority]
-                        )}>
-                        {ICONS[task.priority] || null}
+                    <span className="text-lg mb-1">
+                        {ICONS(task?.priority)}
                     </span>
                     <span className="capitalize">{task.priority}</span>
                 </div>
             </td>
 
             <td className="py-2">
-                <div className="flex">
-                    {task.team.map((m, index) => (
-                        <div
-                            key={index}
-                            className={clsx(
-                                'w-7 h-7 rounded-full text-white flex items-center justify-center text-sm -mr-1',
-                                BGS[index % BGS.length]
-                            )}>
-                            <UserInfo user={m} />
-                        </div>
-                    ))}
-                </div>
+                {Array.isArray(task.team) ? (
+                    <div className="flex">
+                        {task.team.map((m, index) => (
+                            <div
+                                key={index}
+                                className={clsx(
+                                    'w-7 h-7 rounded-full text-white flex items-center justify-center text-sm -mr-1',
+                                    BGS[index % BGS.length]
+                                )}>
+                                <UserInfo user={m} />
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <span className="text-sm text-gray-600">
+                        {task.team || 'No Team'}
+                    </span>
+                )}
             </td>
             <td className="py-2 hidden md:block">
                 <span className="text-base text-gray-600">
@@ -209,7 +218,7 @@ const Dashboard = () => {
                     <p className="text-base text-gray-600">{label}</p>
                     <span className="text-2xl font-semibold">{count}</span>
                     <span className="text-sm text-gray-400">
-                        {'110 last month'}
+                        {/* {'110 last month'} */}
                     </span>
                 </div>
 

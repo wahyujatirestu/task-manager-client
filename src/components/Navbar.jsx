@@ -25,7 +25,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className="flex justify-between items-center bg-white px-4 py-3 2xl:py-4 sticky z-10 top-0">
+        <div className="flex justify-between items-center shadow-sm bg-white px-4 py-3 2xl:py-4 sticky z-10 top-0">
             <div className="flex gap-4 relative">
                 <button
                     onClick={() => dispatch(setOpenSidebar(true))}

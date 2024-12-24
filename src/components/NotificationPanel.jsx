@@ -29,14 +29,16 @@ const NotificationPanel = () => {
     const [markAsRead] = useMarkNotiAsReadMutation();
 
     useEffect(() => {
-        if (data) {
-            setNotifications(data.filter((item) => !item.isRead));
+        console.log('Fetched notifications:', data);
+        if (data?.data && Array.isArray(data.data)) {
+            setNotifications(data.data.filter((item) => !item.isRead));
         } else {
             setNotifications([]);
         }
     }, [data]);
 
     const readHandler = async (type, id) => {
+        console.log(`Marking notifications as read, type: ${type}, id: ${id}`);
         await markAsRead({ type, id }).unwrap();
 
         if (type === 'one') {
@@ -49,6 +51,7 @@ const NotificationPanel = () => {
     };
 
     const viewHandler = async (el) => {
+        console.log('Viewing notification:', el);
         setSelected(el);
         await readHandler('one', el.id);
         setOpen(true);

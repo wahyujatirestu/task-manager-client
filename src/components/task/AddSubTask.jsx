@@ -14,9 +14,10 @@ const AddSubTask = ({ open, setOpen, id }) => {
     } = useForm();
 
     const [addSubTask] = useCreateSubTaskMutation();
-    console.log(id);
+    console.log('AddSubTask id:', id);
 
     const handleOnSubmit = async (data) => {
+        console.log('AddSubTask data:', data);
         try {
             const res = await addSubTask({ data, id }).unwrap();
             toast.success(res.message);
@@ -24,7 +25,7 @@ const AddSubTask = ({ open, setOpen, id }) => {
                 setOpen(false);
             }, 500);
         } catch (err) {
-            console.log(err);
+            console.log('AddSubTask error:', err);
             toast.error(err?.data?.message || err.error);
         }
     };

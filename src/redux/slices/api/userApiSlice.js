@@ -3,6 +3,7 @@ import { apiSlice } from '../apiSlice';
 const USER_URL = '/user';
 
 export const userApiSlice = apiSlice.injectEndpoints({
+    tagTypes: ['GroupMembers'],
     endpoints: (builder) => ({
         getAllUsers: builder.query({
             query: () => ({
@@ -35,6 +36,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method: 'DELETE',
                 credentials: 'include',
             }),
+            invalidatesTags: (result, error, id) => [{ type: 'GroupMembers' }],
         }),
 
         userAction: builder.mutation({
@@ -42,6 +44,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url: `${USER_URL}/${data.id}`,
                 method: 'PUT',
                 body: data,
+                credentials: 'include',
+            }),
+        }),
+
+        searchUsers: builder.query({
+            query: (query) => ({
+                url: `${USER_URL}/search-users?query=${query}`,
+                method: 'GET',
                 credentials: 'include',
             }),
         }),
@@ -83,4 +93,5 @@ export const {
     useMarkNotiAsReadMutation,
     useChangePasswordMutation,
     useGetAllUsersQuery,
+    useSearchUsersQuery,
 } = userApiSlice;

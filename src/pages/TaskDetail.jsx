@@ -203,7 +203,7 @@ const TaskDetails = () => {
                                         TASK TEAM
                                     </p>
                                     <div className="space-y-3">
-                                        {task?.team?.map((m, index) => (
+                                        {task?.group?.map((m, index) => (
                                             <div
                                                 key={index}
                                                 className="flex gap-4 py-2 items-center border-t border-gray-200">

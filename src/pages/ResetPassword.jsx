@@ -5,6 +5,7 @@ import { useResetPasswordMutation } from '../redux/slices/api/authApiSlice';
 import { toast } from 'sonner';
 import Textbox from '../components/Textbox';
 import Button from '../components/Button';
+import Loading from '../components/Loader';
 
 const ResetPassword = () => {
     const { token } = useParams();
@@ -55,12 +56,15 @@ const ResetPassword = () => {
                         className="mb-4"
                         required
                     />
-                    <Button
-                        type="submit"
-                        label="Reset Password"
-                        className="w-full bg-blue-600 text-white"
-                        disabled={isLoading}
-                    />
+                    {isLoading ? (
+                        <Loading />
+                    ) : (
+                        <Button
+                            type="submit"
+                            label="Reset Password"
+                            className="w-full h-10 bg-blue-700 text-white rounded-full"
+                        />
+                    )}
                 </form>
             </div>
         </div>

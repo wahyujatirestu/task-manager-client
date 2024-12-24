@@ -20,6 +20,7 @@ import ForgetPassword from './pages/ForgetPassword';
 import ResetPassword from './pages/ResetPassword';
 import ResendVerificationEmail from './components/ResendVerificationEmail';
 import VerifyEmailInfo from './components/VerifyEmailInfo';
+import Teams from './components/Teams';
 
 function Layout() {
     const { user } = useSelector((state) => state.auth);
@@ -76,10 +77,10 @@ const MobileSidebar = () => {
                         )}
                         onClick={() => closeSidebar()}>
                         <div className="bg-white w-3/4 h-full">
-                            <div className="w-full flex justify-end px-5 mt-5">
+                            <div className="w-full flex justify-end px-5 pt-3 ">
                                 <button
                                     onClick={() => closeSidebar()}
-                                    className="flex justify-end items-end">
+                                    className="flex justify-end items-end mt-2">
                                     <IoClose size={25} />
                                 </button>
                             </div>
@@ -114,6 +115,7 @@ function App() {
                     <Route path="/trashed" element={<Trash />} />
                     <Route path="/task/:id" element={<TaskDetails />} />
                     <Route path="/tasks" element={<TaskList />} />
+                    <Route path="/group" element={<Teams />} />
                 </Route>
                 <Route path="/verify-email" element={<VerifyEmail />} />
                 <Route

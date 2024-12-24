@@ -32,7 +32,9 @@ const Tasks = () => {
     const [selected, setSelected] = useState(0);
     const [open, setOpen] = useState(false);
 
+    console.log('Current params:', params);
     const status = params?.status || '';
+    console.log('Current status:', status);
 
     const { data, isLoading } = useGetAllTaskQuery({
         strQuery: status,
@@ -46,18 +48,23 @@ const Tasks = () => {
         ? data?.tasks.filter((task) => task.stage === status)
         : data?.tasks;
 
+    console.log('Filtered tasks:', filteredTasks);
+
     const handleCreateTaskClick = () => {
+        console.log('Create Task button clicked');
         setOpen(true);
     };
 
     const updateTaskStage = async (taskId, newStage) => {
+        console.log(`Updating task ${taskId} to stage ${newStage}`);
         try {
             await updateTask({
                 id: taskId,
                 data: { stage: newStage },
             });
+            console.log(`Task ${taskId} updated successfully`);
         } catch (error) {
-            console.error(error);
+            console.error('Error updating task:', error);
         }
     };
 
@@ -68,8 +75,6 @@ const Tasks = () => {
     ) : (
         <div className="w-full">
             <div className="flex items-center justify-between mb-4">
-                {/* <Title title={status ? `${status} Tasks` : 'Tasks'} /> */}
-
                 {!status && (
                     <Button
                         onClick={handleCreateTaskClick}
@@ -101,7 +106,7 @@ const Tasks = () => {
                         onUpdateTaskStatus={updateTaskStage}
                     />
                 ) : (
-                    <div className="w-full">
+                    <div className="w-full ">
                         <Table tasks={filteredTasks} />
                     </div>
                 )}
