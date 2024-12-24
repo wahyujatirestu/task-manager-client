@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { setCredentials, logout } from './authSlice';
 
-const API_URI = import.meta.env.VITE_APP_BASE_URL;
+const API_URI = ' https://task-manager-restu.vercel.app';
 
 const baseQuery = fetchBaseQuery({
     baseUrl: API_URI + '/api',
