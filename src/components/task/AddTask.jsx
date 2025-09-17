@@ -81,9 +81,9 @@ const AddTask = ({ open, setOpen, task, groups, groupId }) => {
     }, [task, reset]);
 
     const submitHandler = async (data) => {
-        console.log('AddTask: submitHandler', { data });
         try {
             setUploading(true);
+            console.log('AddTask: submitHandler', { data });
 
             // Upload assets
             const uploadedURLs = await Promise.all(
@@ -95,6 +95,7 @@ const AddTask = ({ open, setOpen, task, groups, groupId }) => {
                 assets: [...URLS, ...uploadedURLs],
                 stage: stage.toUpperCase(),
                 priority: priority.toUpperCase(),
+                team: team.map((member) => ({ id: member.id })), // Assign selected team members
             };
 
             // Add team if groupId exists and user is admin
@@ -102,7 +103,6 @@ const AddTask = ({ open, setOpen, task, groups, groupId }) => {
                 taskData.team = team;
             }
 
-            // Determine if it's an update or create operation
             if (task) {
                 // Update task
                 await updateTask({

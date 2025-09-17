@@ -116,14 +116,14 @@ const TaskCard = ({ task }) => {
                     </div>
 
                     <div className="flex flex-row-reverse">
-                        {task?.team?.map((m, index) => (
+                        {task?.team?.map((member, index) => (
                             <div
                                 key={index}
                                 className={clsx(
                                     'w-7 h-7 rounded-full text-white flex items-center justify-center text-sm -mr-1',
                                     BGS[index % BGS?.length]
                                 )}>
-                                <UserInfo user={m} />
+                                <UserInfo user={member} />
                             </div>
                         ))}
                     </div>

@@ -199,7 +199,7 @@ const Login = () => {
                                     />
                                 )}
 
-                                <div className="flex items-center">
+                                {/* <div className="flex items-center">
                                     <hr className="w-full border-gray-300" />
                                     <span className="px-4 text-gray-500 text-sm">
                                         or
@@ -217,7 +217,7 @@ const Login = () => {
                                     }>
                                     <FaGoogle />
                                     Login with Google
-                                </button>
+                                </button> */}
                             </form>
                         )}
 

@@ -30,7 +30,7 @@ export const groupApiSlice = apiSlice.injectEndpoints({
         }),
         addUserToGroup: builder.mutation({
             query: ({ groupId, userId }) => ({
-                url: `/group/${groupId}/add-user`,
+                url: `${GROUP_URL}/${groupId}/add-user`,
                 method: 'POST',
                 body: { userId },
             }),
